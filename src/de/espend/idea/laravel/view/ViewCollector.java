@@ -69,15 +69,19 @@ public class ViewCollector {
                 }
 
                 if(filename.endsWith(".php")) {
-                    filename = filename.substring(0, filename.length() - 4);
+                    filename = filename.substring(0, filename.length() - ".php".length());
                 }
 
                 if(filename.endsWith(".blade")) {
-                    filename = filename.substring(0, filename.length() - 6);
+                    filename = filename.substring(0, filename.length() - ".blade".length());
                 }
 
-                if(filename.endsWith(".html.twig")) {
-                    filename = filename.substring(0, filename.length() - ".html.twig".length());
+                if(filename.endsWith(".twig")) {
+                    filename = filename.substring(0, filename.length() - ".twig".length());
+                }
+
+                if(filename.endsWith(".html")) {
+                    filename = filename.substring(0, filename.length() - ".html".length());
                 }
 
                 if(templatePath.getNamespace() != null) {
@@ -96,7 +100,7 @@ public class ViewCollector {
                 }
 
                 String extension = virtualFile.getExtension();
-                if(extension != null && (extension.equalsIgnoreCase("php") || extension.equalsIgnoreCase("twig"))) {
+                if(extension != null && (extension.equalsIgnoreCase("php") || extension.equalsIgnoreCase("twig") || extension.equalsIgnoreCase("html.twig"))) {
                     return true;
                 }
 

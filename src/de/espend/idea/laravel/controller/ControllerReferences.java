@@ -102,7 +102,6 @@ public class ControllerReferences implements GotoCompletionRegistrar {
                 if (MethodMatcher.getMatchedSignatureWithDepth(parent, ACTIONS) != null ||
                     PhpElementsUtil.isFunctionReference(psiElement.getParent(), 0, "link_to_action", "action")
                     ) {
-
                     return new ControllerRoute(parent);
                 }
 
@@ -111,6 +110,20 @@ public class ControllerReferences implements GotoCompletionRegistrar {
                 */
                 PsiElement uses = getUsesArrayMethodParameter(parent);
                 if (uses != null && MethodMatcher.getMatchedSignatureWithDepth(uses, ROUTE, 1) != null) {
+                    return new ControllerRoute(parent);
+                }
+
+                /*
+                get('user/profile', ['uses' => 'UserController@showProfile']);
+                */
+                if (uses != null && PhpElementsUtil.isFunctionReference(uses, 1, "get", "post", "put", "patch", "delete")) {
+                    return new ControllerRoute(parent);
+                }
+
+                /*
+                get('user/profile', 'UserController@showProfile');
+                */
+                if (PhpElementsUtil.isFunctionReference(psiElement.getParent(), 1, "get", "post", "put", "patch", "delete")) {
                     return new ControllerRoute(parent);
                 }
 
