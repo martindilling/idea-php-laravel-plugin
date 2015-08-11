@@ -22,6 +22,7 @@ import java.util.List;
 )
 public class LaravelSettings implements PersistentStateComponent<LaravelSettings> {
 
+    public String appNamespace = "App";
     public boolean pluginEnabled = false;
     public boolean useAutoPopup = false;
 

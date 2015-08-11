@@ -7,6 +7,7 @@ import com.jetbrains.php.lang.psi.elements.Field;
 import com.jetbrains.php.lang.psi.elements.Method;
 import com.jetbrains.php.lang.psi.elements.PhpClass;
 import com.jetbrains.php.lang.psi.elements.StringLiteralExpression;
+import de.espend.idea.laravel.LaravelSettings;
 import fr.adrienbrault.idea.symfony2plugin.codeInsight.utils.PhpElementsUtil;
 import org.apache.commons.lang.StringUtils;
 import org.jetbrains.annotations.NotNull;
@@ -19,11 +20,15 @@ import java.util.HashSet;
  */
 public class ControllerCollector {
 
+    private static LaravelSettings getSettings(final Project project) {
+        return LaravelSettings.getInstance(project);
+    }
+
     public static void visitControllerActions(final Project project, ControllerActionVisitor visitor) {
 
         Collection<PhpClass> allSubclasses = new HashSet<PhpClass>() {{
             addAll(PhpIndex.getInstance(project).getAllSubclasses("\\Illuminate\\Routing\\Controller"));
-            addAll(PhpIndex.getInstance(project).getAllSubclasses("\\App\\Http\\Controllers\\Controller"));
+            addAll(PhpIndex.getInstance(project).getAllSubclasses("\\" + getSettings(project).appNamespace + "\\Http\\Controllers\\Controller"));
         }};
 
         String ns = getDefaultNamespace(project);
@@ -58,7 +63,7 @@ public class ControllerCollector {
     @NotNull
     private static String getDefaultNamespace(@NotNull Project project) {
 
-        PhpClass providerPhpClass = PhpElementsUtil.getClassInterface(project, "\\App\\Providers\\RouteServiceProvider");
+        PhpClass providerPhpClass = PhpElementsUtil.getClassInterface(project, "\\" + getSettings(project).appNamespace + "\\Providers\\RouteServiceProvider");
         if(providerPhpClass != null) {
             Field namespace = providerPhpClass.findOwnFieldByName("namespace", false);
             if(namespace != null) {
@@ -75,7 +80,7 @@ public class ControllerCollector {
             }
         }
 
-        return "\\App\\Http\\Controllers";
+        return "\\" + getSettings(project).appNamespace + "\\Http\\Controllers";
     }
 
     public static interface ControllerActionVisitor {
@@ -86,7 +91,7 @@ public class ControllerCollector {
 
         Collection<PhpClass> allSubclasses = new HashSet<PhpClass>() {{
             addAll(PhpIndex.getInstance(project).getAllSubclasses("\\Illuminate\\Routing\\Controller"));
-            addAll(PhpIndex.getInstance(project).getAllSubclasses("\\App\\Http\\Controllers\\Controller"));
+            addAll(PhpIndex.getInstance(project).getAllSubclasses("\\" + getSettings(project).appNamespace + "\\Http\\Controllers\\Controller"));
         }};
 
         String ns = getDefaultNamespace(project);

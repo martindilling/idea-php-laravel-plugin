@@ -9,6 +9,7 @@ import com.intellij.openapi.options.ConfigurationException;
 import com.intellij.openapi.project.Project;
 import com.intellij.openapi.vfs.VfsUtil;
 import com.intellij.openapi.vfs.VirtualFile;
+import com.intellij.ui.components.JBTextField;
 import de.espend.idea.laravel.LaravelSettings;
 import org.jetbrains.annotations.Nls;
 import org.jetbrains.annotations.NotNull;
@@ -35,6 +36,7 @@ public class LaravelProjectSettingsForm implements Configurable {
     private TextFieldWithBrowseButton textViewsPath;
     private JButton buttonViewsPathReset;
     private JCheckBox useAutoPopopForCompletionCheckBox;
+    private JBTextField textAppNamespace;
 
     @Nls
     @Override
@@ -61,6 +63,7 @@ public class LaravelProjectSettingsForm implements Configurable {
     public boolean isModified() {
         return !enabled.isSelected() == getSettings().pluginEnabled
             || !useAutoPopopForCompletionCheckBox.isSelected() == getSettings().useAutoPopup
+            || !textAppNamespace.getText().equals(getSettings().appNamespace)
             ;
     }
 
@@ -68,6 +71,7 @@ public class LaravelProjectSettingsForm implements Configurable {
     public void apply() throws ConfigurationException {
         getSettings().pluginEnabled = enabled.isSelected();
         getSettings().useAutoPopup = useAutoPopopForCompletionCheckBox.isSelected();
+        getSettings().appNamespace = textAppNamespace.getText();
     }
 
     @Override
@@ -78,6 +82,7 @@ public class LaravelProjectSettingsForm implements Configurable {
     private void updateUIFromSettings() {
         enabled.setSelected(getSettings().pluginEnabled);
         useAutoPopopForCompletionCheckBox.setSelected(getSettings().useAutoPopup);
+        textAppNamespace.setText(getSettings().appNamespace);
     }
 
     @Override
